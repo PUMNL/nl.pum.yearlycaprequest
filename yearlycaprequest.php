@@ -46,6 +46,13 @@ function yearlycaprequest_civicrm_uninstall() {
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_enable
  */
 function yearlycaprequest_civicrm_enable() {
+  /*
+   * extension nl.pum.threepeas has to be installed and enabled for this
+   * extions to work
+   */
+  if (_yearlycaprequest_checkThreepeasActive() == FALSE) {
+    throw new Exception('This extension (nl.pum.yearlycaprequest) requires extension nl.pum.threepeas installed and enabled!');
+  };
   _yearlycaprequest_civix_civicrm_enable();
 }
 
@@ -106,3 +113,24 @@ function yearlycaprequest_civicrm_caseTypes(&$caseTypes) {
 function yearlycaprequest_civicrm_alterSettingsFolders(&$metaDataFolders = NULL) {
   _yearlycaprequest_civix_civicrm_alterSettingsFolders($metaDataFolders);
 }
+
+/**
+ * Function to check if extension nl.pum.threepeas is installed and enabled
+ *
+ * @return bool
+ */
+function _yearlycaprequest_checkThreepeasActive() {
+  $query = '
+    SELECT COUNT(*) as countExtension FROM civicrm_extension
+    WHERE full_name = %1 AND is_active = %2';
+  $params = array(
+    1 => array('nl.pum.threepeas', 'String'),
+    2 => array(1, 'Integer'));
+  $dao = CRM_Core_DAO::executeQuery($query, $params);
+  if ($dao->fetch()) {
+    if ($dao->countExtension > 0) {
+      return TRUE;
+    }
+  }
+  return FALSE;
+ }

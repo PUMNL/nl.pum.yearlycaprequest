@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<menu>
+  <item>
+    <path>civicrm/testpage</path>
+    <page_callback>CRM_Yearlycaprequest_Page_Testpage</page_callback>
+    <title>Testpage</title>
+    <access_arguments>access CiviCRM</access_arguments>
+  </item>
+</menu>
